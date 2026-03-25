@@ -12,6 +12,8 @@ TOKEN = os.getenv("TOKEN")
 
 SYMBOLS = ["BTC_USDT","ETH_USDT","XRP_USDT","SUI_USDT","OP_USDT","PEPE_USDT"]
 
+CHAT_IDS = [5335165612, 3333]
+
 last_signals = {}
 
 # =========================
@@ -149,19 +151,21 @@ def build_message():
 # TELEGRAM
 # =========================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    context.application.chat_id = update.effective_chat.id
     await update.message.reply_text("🔥 BOT PRO ĐANG CHẠY")
-
 # =========================
 # LOOP
 # =========================
 async def loop(app):
     while True:
         try:
-            if hasattr(app, "chat_id"):
-                msg = build_message()
-                if msg:
-                    await app.bot.send_message(chat_id=app.chat_id, text=msg)
+            msg = build_message()
+
+            if msg:
+                for chat_id in CHAT_IDS:
+                    try:
+                        await app.bot.send_message(chat_id=chat_id, text=msg)
+                    except:
+                        pass
         except Exception as e:
             print(e)
 
