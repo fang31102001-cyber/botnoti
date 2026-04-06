@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from flask import Flask
 from threading import Thread
 
-TOKEN = os.getenv("TOKEN")
+print("TOKEN:", TOKEN)
 
 SYMBOLS = ["BTC_USDT","ETH_USDT","XRP_USDT","SUI_USDT","OP_USDT","PEPE_USDT"]
 
@@ -30,11 +30,13 @@ def home():
     return "OK"
 
 def run_web():
-    app_web.run(host='0.0.0.0', port=10000)
-
+    port = int(os.environ.get("PORT", 10000))
+    app_web.run(host='0.0.0.0', port=port)
+    
 def keep_alive():
-    Thread(target=run_web).start()
-
+    t = Thread(target=run_web)
+    t.daemon = True
+    t.start()
 # =========================
 # DATA
 # =========================
@@ -236,7 +238,7 @@ def build_message_for_user(chat_id):
             msg += f"Khung 15m xuất hiện volume lớn kèm giá giảm, RSI {round(rsi15,1)} → lực bán đang chiếm ưu thế.\n\n"
         else:
             msg += f"Khung 15m thị trường đang đi ngang, RSI ở mức {round(rsi15,1)}.\n\n"
-        if oi15 != "":
+        if oi15:
             msg += f"{oi15}.\n\n"
 
         # ===== 1H =====
@@ -345,3 +347,8 @@ async def main():
     app.post_init = post_init
 
     await app.run_polling()
+    
+try:
+    asyncio.run(main())
+except Exception as e:
+    print("LỖI CHÍNH:", e)
