@@ -332,12 +332,16 @@ async def main():
     keep_alive()
 
     app = ApplicationBuilder().token(TOKEN).build()
+
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("set", set_coin))
 
-    asyncio.create_task(loop(app))
-
     print("RUNNING PRO BOT...")
-    await app.run_polling()
 
-asyncio.run(main())
+    # chạy loop song song đúng cách
+    async def post_init(app):
+        asyncio.create_task(loop(app))
+
+    app.post_init = post_init
+
+    await app.run_polling()
