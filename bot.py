@@ -9,7 +9,8 @@ from datetime import datetime, timedelta
 from flask import Flask
 from threading import Thread
 
-print("TOKEN:", TOKEN)
+TOKEN = os.getenv("TOKEN")
+print("TOKEN DEBUG:", TOKEN)
 
 SYMBOLS = ["BTC_USDT","ETH_USDT","XRP_USDT","SUI_USDT","OP_USDT","PEPE_USDT"]
 
