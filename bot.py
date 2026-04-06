@@ -331,9 +331,7 @@ async def loop(app):
 # =========================
 # MAIN
 # =========================
-async def main():
-    keep_alive()
-
+def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
@@ -341,15 +339,14 @@ async def main():
 
     print("RUNNING PRO BOT...")
 
-    # chạy loop song song đúng cách
+    # chạy loop song song
     async def post_init(app):
         asyncio.create_task(loop(app))
 
     app.post_init = post_init
 
-    await app.run_polling()
+    app.run_polling()
     
-try:
-    asyncio.run(main())
-except Exception as e:
-    print("LỖI CHÍNH:", e)
+main()
+
+    
